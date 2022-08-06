@@ -1,0 +1,35 @@
+{
+  "name": "douki",
+  "version": "0.0.0",
+  "description": "Subtitle synchronization using audio fingerprinting",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qgustavor/douki.git"
+  },
+  "keywords": [
+    "subtitle",
+    "synchronization"
+  ],
+  "author": "qgustavor (https://github.com/qgustavor)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qgustavor/douki/issues"
+  },
+  "homepage": "https://github.com/qgustavor/douki#readme",
+  "devDependencies": {
+    "standard": "^17.0.0"
+  },
+  "dependencies": {
+    "@qgustavor/ass-parser": "^0.2.2",
+    "@qgustavor/ass-stringify": "^0.1.8",
+    "@qgustavor/stream-audio-fingerprint": "^2.0.5"
+  }
+}
