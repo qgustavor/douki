@@ -9,7 +9,7 @@ Douki is a audio fingerprinting based subtitle synchronization tool.
 
 This project started in ‎October ‎2020 and was made to automatically synchronize song translations in anime. It was been already tested with dozens of anime, including Douki-chan.
 
-At the moment only a programmatic API is available. Check the roadmap in the respective GitHub issue.
+At the moment only a programmatic API is available. Check the roadmap [in the respective GitHub issue](https://github.com/qgustavor/douki/issues/1).
 
 ## Usage
 
