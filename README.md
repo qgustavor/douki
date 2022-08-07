@@ -1,6 +1,4 @@
-# Douki
-
-![](https://i.imgur.com/VIBFtEr.png)
+![Douki logo](https://i.imgur.com/VIBFtEr.png)
 
 Douki is a audio fingerprinting based subtitle synchronization tool.
 
@@ -23,43 +21,46 @@ import { generateSyncData } from 'douki'
 await generateSyncData({
   // Path to audio or video file containing the section to be synchronized
   sourceFile: 'Test - Episode 2.mkv',
-  // The start and end times of the section (seconds or a 00:00.00 timestamp)
-  start: 0,
-  end: 90,
-  // Name of the section
-  name: 'opening',
   // Directory where the synchronization data will be stored
   // (a single directory can store data from multiple sections from the same project)
   dataDir: 'projects/test',
-  // Optionally a .ass file to be used as template
+  // The start and end times of the section (optional)
+  // Can be a seconds number or a 00:00.00 timestamp string
+  start: 0,
+  end: 90,
+  // Name of the section (optional)
+  name: 'opening',
+  // A .ass file to be used as template (optional)
   templatePath: 'template.ass'
 })
 ```
 
-By running the above code it will create a `.json` file containing synchronization data, a `.mkv` containing the synchronized section (just to aid authoring the subtitle), a subdirectory containing attachments found in the source file (if there was), an `.ass` file with the subtitle found in the source file or, if there was not any, based in the template, and a `keyframes.txt` file.
+By running the above code it will create a `.json` file containing synchronization data, a `.mkv` containing the synchronized section, a subdirectory containing attachments found in the source file, an `.ass` file with the subtitle found in the source file or, if there was not any, based in the template, and a `keyframes.txt` file.
 
-Edit the `.ass` as needed. It should be timed against the `.mkv` file.
+Edit the `.ass` as needed. It should be timed against the `.mkv` file. Run the above code multiple times for each section to be synchronized. The `.mkv` and `keyframes.txt` files are meant only to aid editing the `.ass` file and can be deleted afterwards.
 
 Run the below code to synchronize the section to another files:
 
 ```js
 import { synchronizeSubtitles } from 'douki'
 
-const { subtitle, attachments } = await synchronizeSubtitles(
+const result = await synchronizeSubtitles(
   // Path to the new video or audio file to sync subtitles against
-  'episode 3.mkv',
-  // Path to the directory synchronization data was stored
+  'Test - Episode 3.mkv',
+  // Path to the directory where synchronization data was stored
   'projects/test',
   // Path to the directory generated files will be stored
   'some/temporary/dir'
 )
 
 // The path to the generated subtitle
-console.log(subtitle)
+console.log(result.subtitle)
 
 // An array of paths of the files that need to be
 // attached along the generated subtitle
-console.log(attachments)
+console.log(result.attachments)
+
+// synchronizeSubtitles will return undefined when there are no matches
 ```
 
 You can use a player that natively supports multiple subtitles at the same time (like MX Player, which is the player it was been mostly tested on) or use [a MPV fork](https://github.com/mpv-player/mpv/issues/3022#issue-145555437) that enables support to multiple subtitles or find a way to merge the generated subtitles with existent ones.
