@@ -35,11 +35,11 @@ Example:
 ``` bash
 # Takes episode-02.mkv, splits from 1:00 to 2:30 and generates synchronization
 # files from it named opening.json and opening.ass in the current directory
-deno run -A path/to/cli.ts generate-sync-data episode-02.mkv -s 1:00 -t 2:30 -n opening`
+deno run -A path/to/cli.ts generate-sync-data episode-02.mkv -s 1:00 -t 2:30 -n opening
 
 # Takes ending.mkv and generates synchronization files from it named ending.json
 # and ending.ass in the "test-project" directory using template.ass as a template
-deno run -A path/to/cli.ts generate-sync-data ending.mkv -n ending -d test-project --template template.ass`
+deno run -A path/to/cli.ts generate-sync-data ending.mkv -n ending -d test-project --template template.ass
 ```
 
 That command must be run for each section that needs to be synchronized (like an opening and an ending). After running that command edit the generated .ass file as needed. If the source file already had a subtitle it will be used, otherwise the template will be used, but if no template was specified then no subtitle will be generated and you will need to create one.
