@@ -1,39 +1,45 @@
 import { parseTimestamp, formatTimestamp } from './utils/timestamp.js'
-import Fingerprinter from '@qgustavor/stream-audio-fingerprint'
-import stringify from '@qgustavor/ass-stringify'
-import parse from '@qgustavor/ass-parser'
-import cp from 'child_process'
-import path from 'path'
-import fs from 'fs'
+import Fingerprinter from 'https://cdn.skypack.dev/@qgustavor/stream-audio-fingerprint'
+import stringify from 'https://cdn.skypack.dev/@qgustavor/ass-stringify'
+import parse from 'https://cdn.skypack.dev/@qgustavor/ass-parser'
+import * as path from 'https://deno.land/std@0.151.0/node/path/mod.ts'
 
 export default async function (filePath, syncFolder, targetFolder) {
   const attachments = []
-  const syncFiles = await fs.promises.readdir(syncFolder)
-  const syncFingerprints = syncFiles.filter(e => e.endsWith('.json'))
+  const syncFingerprints = []
+  for await (const { name } of Deno.readDir(syncFolder)) {
+    if (name.endsWith('.json')) {
+      syncFingerprints.push(name)
+    }
+  }
 
   const fingerprinter = new Fingerprinter()
-  const decoder = cp.spawn('ffmpeg', [
-    '-i', filePath,
-    '-acodec', 'pcm_s16le',
-    '-ar', 22050,
-    '-ac', 1,
-    '-f', 'wav',
-    '-v', 'fatal',
-    'pipe:1'
-  ], {
-    stdio: ['ignore', 'pipe', 'pipe']
+  const decoder = Deno.run({
+    cmd: [
+      'ffmpeg',
+      '-i', filePath,
+      '-acodec', 'pcm_s16le',
+      '-ar', 22050,
+      '-ac', 1,
+      '-f', 'wav',
+      '-v', 'fatal',
+      'pipe:1'
+    ],
+    stdin: 'null',
+    stderr: 'null',
+    stdout: 'piped'
   })
 
   const haystackFingerprints = []
-  decoder.stdout.on('data', audioData => {
+  for await (const audioData of decoder.stdout.readable) {
     const data = fingerprinter.process(audioData)
     for (let i = 0; i < data.tcodes.length; i++) {
       haystackFingerprints.push([
         data.tcodes[i], data.hcodes[i]
       ])
     }
-  })
-  await new Promise(resolve => decoder.on('close', resolve))
+  }
+  await decoder.status()
 
   let syncedSubtitles = []
   for (const fingerFilename of syncFingerprints) {
@@ -42,12 +48,15 @@ export default async function (filePath, syncFolder, targetFolder) {
     const attachmentsPath = path.resolve(syncFolder,
       fingerFilename.replace('.json', '-attachments')
     )
-    const fingerAttachments = await fs.promises.readdir(attachmentsPath).catch(() => [])
-    for (const file of fingerAttachments) {
-      attachments.push(path.resolve(attachmentsPath, file))
+    try {
+      for await (const file of Deno.readDir(attachmentsPath)) {
+        attachments.push(path.resolve(attachmentsPath, file.name))
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error
     }
 
-    const fingerprints = JSON.parse(await fs.promises.readFile(fingerPath, 'utf-8'))
+    const fingerprints = JSON.parse(await Deno.readTextFile(fingerPath))
     syncedSubtitles.push({ fingerprints, subtitlePath })
   }
 
@@ -120,7 +129,7 @@ export default async function (filePath, syncFolder, targetFolder) {
   if (syncedSubtitles.length === 0) return
 
   const mainScript = syncedSubtitles[0]
-  const data = await fs.promises.readFile(mainScript.subtitlePath, 'utf-8')
+  const data = await Deno.readTextFile(mainScript.subtitlePath)
   const parsed = parse(data)
   const eventsSection = parsed.find(e => e.section === 'Events')
   const styleSection = parsed.find(e => e.section.includes('Styles'))
@@ -142,7 +151,7 @@ export default async function (filePath, syncFolder, targetFolder) {
 
   const extraScripts = syncedSubtitles.slice(1)
   for (const syncData of extraScripts) {
-    const data = await fs.promises.readFile(syncData.subtitlePath, 'utf-8')
+    const data = await Deno.readTextFile(syncData.subtitlePath)
     const { delay, from, to } = syncData
     const extraScript = parse(data)
     const extraStyles = extraScript
@@ -192,7 +201,7 @@ export default async function (filePath, syncFolder, targetFolder) {
   const subtitleName = subtitleId + '.synced.ass'
   const subtitle = path.resolve(targetFolder, subtitleName)
   const subtitleData = stringify(parsed)
-  await fs.promises.writeFile(subtitle, subtitleData)
+  await Deno.writeTextFile(subtitle, subtitleData)
 
   return { subtitle, attachments }
 }

@@ -5,9 +5,11 @@ Douki is a audio fingerprinting based subtitle synchronization tool.
 > **Douki** (同期): synchronization  
 > -- [Jisho](https://jisho.org/word/%E5%90%8C%E6%9C%9F)
 
-This project started in ‎October ‎2020 and was made to automatically synchronize song translations in anime. It was been already tested with dozens of anime, including Douki-chan.
+This project started in ‎October ‎2020 and was made to automatically synchronize song translations in anime. It was been already tested with dozens of anime, including [*Ganbare, Douki-chan*](https://anilist.co/anime/137877/Ganbare-Doukichan/).
 
-At the moment only a programmatic API is available. Check the roadmap [in the respective GitHub issue](https://github.com/qgustavor/douki/issues/1).
+At the moment only a programmatic API for Node and Deno and a CLI using Deno are available. **You can try this project right now** using the CLI, more info about it [in the `deno` directory](https://github.com/qgustavor/douki/tree/main/deno).
+
+This project is experimental and everything can (and probably will) change. [Check the roadmap for more info.](https://github.com/qgustavor/douki/issues/1)
 
 ## Usage
 
