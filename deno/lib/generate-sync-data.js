@@ -267,7 +267,7 @@ export default async function (data) {
       cwd: attachmentsPath
     })
     let hasAttachments = false
-    for await (const entry of Deno.readdir(attachmentsPath)) {
+    for await (const entry of Deno.readDir(attachmentsPath)) {
       hasAttachments = true
       break
     }

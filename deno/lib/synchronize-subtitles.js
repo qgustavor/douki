@@ -199,7 +199,9 @@ export default async function (filePath, syncFolder, targetFolder) {
 
   const subtitleId = Math.random().toString(36).substr(2)
   const subtitleName = subtitleId + '.synced.ass'
-  const subtitle = path.resolve(targetFolder, subtitleName)
+  const subtitle = targetFolder.includes('.ass')
+    ? targetFolder
+    : path.resolve(targetFolder, subtitleName)
   const subtitleData = stringify(parsed)
   await Deno.writeTextFile(subtitle, subtitleData)
 

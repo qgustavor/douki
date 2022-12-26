@@ -46,7 +46,7 @@ const command = new Command()
   // generate-subtitles
   .command('generate-subtitles', 'Synchronize subtitles to a new audio')
   .option('-s, --source-dir [string]', 'Directory with synchronization data (default: current directory)')
-  .option('-t, --target-dir [string]', 'Directory to store generated subtitle (default: current directory)')
+  .option('-t, --target-dir [string]', 'Directory to store generated subtitle (default: current directory, if includes ".ass" will be target file)')
   .arguments('<source:string>')
   .action(async (options, source: string) => {
     const result = await synchronizeSubtitles(
