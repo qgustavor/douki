@@ -7,9 +7,7 @@ Douki is a audio fingerprinting based subtitle synchronization tool.
 
 This project started in ‎October ‎2020 and was made to automatically synchronize song translations in anime. It was been already tested with dozens of anime, including [*Ganbare, Douki-chan*](https://anilist.co/anime/137877/Ganbare-Doukichan/).
 
-At the moment only a programmatic API for Node and Deno and a CLI using Deno are available. **You can try this project right now** using the CLI, more info about it [in the `deno` directory](https://github.com/qgustavor/douki/tree/main/deno).
-
-This project is experimental and everything can (and probably will) change. [Check the roadmap for more info.](https://github.com/qgustavor/douki/issues/1)
+At the moment only a programmatic API for Node is available. This project is experimental and everything can (and probably will) change. [Check the roadmap for more info.](https://github.com/qgustavor/douki/issues/1)
 
 ## Usage
 
@@ -51,8 +49,8 @@ const result = await synchronizeSubtitles(
   'Test - Episode 3.mkv',
   // Path to the directory where synchronization data was stored
   'projects/test',
-  // Path to the directory generated files will be stored
-  'some/temporary/dir'
+  // Output path: can be a directory or an .ass file
+  'some/temporary/dir' // or 'some/temporary/file.ass'
 )
 
 // The path to the generated subtitle
@@ -65,4 +63,4 @@ console.log(result.attachments)
 // synchronizeSubtitles will return undefined when there are no matches
 ```
 
-You can use a player that natively supports multiple subtitles at the same time (like MX Player, which is the player it was been mostly tested on) or use [a MPV fork](https://github.com/mpv-player/mpv/issues/3022#issue-145555437) that enables support to multiple subtitles or find a way to merge the generated subtitles with existent ones.
+After that [merge the generated subtitles with existent ones](https://github.com/qgustavor/subtitle-tools#merge) and mux with your video.
