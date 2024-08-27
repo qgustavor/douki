@@ -1,6 +1,6 @@
 {
   "name": "douki",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Subtitle synchronization using audio fingerprinting",
   "main": "index.js",
   "type": "module",
